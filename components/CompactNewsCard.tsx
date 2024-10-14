@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card"
+import AnimatedLayout from '@/components/AnimatedLayout'
 
 interface NewsItem {
   title: string;
@@ -13,6 +14,7 @@ interface NewsItem {
 
 export default function CompactNewsCard({ news }: { news: NewsItem }) {
   return (
+    <AnimatedLayout>
     <Card className="mb-4 overflow-hidden match-card">
       <CardContent className="p-4 flex items-start space-x-4">
         {news.urlToImage && (
@@ -28,5 +30,6 @@ export default function CompactNewsCard({ news }: { news: NewsItem }) {
         </div>
       </CardContent>
     </Card>
+    </AnimatedLayout>
   )
 }
