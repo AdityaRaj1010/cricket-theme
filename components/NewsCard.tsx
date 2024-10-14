@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import AnimatedLayout from '@/components/AnimatedLayout'
 
 interface NewsItem {
   title: string;
@@ -13,6 +14,7 @@ interface NewsItem {
 
 export default function NewsCard({ news }: { news: NewsItem }) {
   return (
+    <AnimatedLayout>
     <Card className="h-full flex flex-col match-card">
       <CardHeader>
         <CardTitle className="text-lg">{news.title}</CardTitle>
@@ -38,5 +40,6 @@ export default function NewsCard({ news }: { news: NewsItem }) {
         </div>
       </CardContent>
     </Card>
+    </AnimatedLayout>
   )
 }
