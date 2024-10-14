@@ -6,36 +6,19 @@ const CRICKET_BASE_URL = 'https://api.cricapi.com/v1';
 const NEWS_BASE_URL = 'https://newsapi.org/v2';
 
 interface CacheItem {
-  data: CricketApiResponse | NewsApiResponse;
+  data: unknown;
   timestamp: number;
 }
 
-interface CricketApiResponse {
+interface ApiResponse {
   status: string;
-  data: CricketData[];
-}
-
-interface NewsApiResponse {
-  status: string;
-  articles: NewsArticle[];
-}
-
-interface CricketData {
-  id: string;
-  name: string;
-  // Add other properties as needed
-}
-
-interface NewsArticle {
-  title: string;
-  description: string;
-  // Add other properties as needed
+  data: unknown[];
 }
 
 const cache: { [key: string]: CacheItem } = {};
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-async function fetchFromCricketAPI(endpoint: string): Promise<CricketApiResponse> {
+async function fetchFromCricketAPI(endpoint: string): Promise<ApiResponse> {
   const url = `${CRICKET_BASE_URL}/${endpoint}?apikey=${CRICKET_API_KEY}`;
   const res = await fetch(url);
 
@@ -46,7 +29,7 @@ async function fetchFromCricketAPI(endpoint: string): Promise<CricketApiResponse
   return res.json();
 }
 
-async function fetchFromNewsAPI(): Promise<NewsApiResponse> {
+async function fetchFromNewsAPI(): Promise<unknown> {
   const url = `${NEWS_BASE_URL}/everything?q=cricket&language=en&sortBy=publishedAt&apiKey=${NEWS_API_KEY}`;
   const res = await fetch(url);
 
@@ -54,11 +37,11 @@ async function fetchFromNewsAPI(): Promise<NewsApiResponse> {
     throw new Error(`API request failed: ${res.status}`);
   }
 
-  const data: NewsApiResponse = await res.json();
+  const data = await res.json();
   
   // Filter articles to ensure they are cricket-related
   const cricketKeywords = ['cricket', 'ipl', 'test match', 'odi', 't20', 'bcci', 'icc'];
-  const filteredArticles = data.articles.filter((article: NewsArticle) => 
+  const filteredArticles = data.articles.filter((article: any) => 
     cricketKeywords.some(keyword => 
       article.title.toLowerCase().includes(keyword) || 
       article.description.toLowerCase().includes(keyword)
@@ -68,7 +51,7 @@ async function fetchFromNewsAPI(): Promise<NewsApiResponse> {
   return { ...data, articles: filteredArticles };
 }
 
-async function getCachedData(key: string, fetchFunction: () => Promise<CricketApiResponse | NewsApiResponse>): Promise<CricketApiResponse | NewsApiResponse> {
+async function getCachedData(key: string, fetchFunction: () => Promise<unknown>): Promise<unknown> {
   const now = Date.now();
   if (cache[key] && now - cache[key].timestamp < CACHE_DURATION) {
     return cache[key].data;
@@ -84,7 +67,7 @@ export async function GET(request: Request) {
   const action = searchParams.get('action');
 
   try {
-    let data: CricketApiResponse | NewsApiResponse;
+    let data: unknown;
     switch (action) {
       case 'matches':
         data = await getCachedData('matches', () => fetchFromCricketAPI('matches'));
@@ -100,8 +83,8 @@ export async function GET(request: Request) {
     }
     
     if (action === 'news') {
-      return NextResponse.json({ data: (data as NewsApiResponse).articles || [] });
-    } else if ('data' in data && Array.isArray(data.data)) {
+      return NextResponse.json({ data: data.articles || [] });
+    } else if (data && Array.isArray(data.data)) {
       return NextResponse.json({ data: data.data });
     } else {
       console.error('Unexpected API response structure:', data);
