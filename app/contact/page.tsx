@@ -68,7 +68,7 @@ export default function ContactPage() {
         </form>
         <div className="mt-8 text-center">
           <Link href="/">
-            <Button variant="outline match-card">Back to Home</Button>
+            <Button className="outline match-card">Back to Home</Button>
           </Link>
         </div>
       </div>
