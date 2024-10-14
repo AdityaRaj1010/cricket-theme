@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { useState, useEffect, Suspense } from 'react'
-import { Activity, Menu } from 'lucide-react'
-import Link from 'next/link'
-import { Button } from "@/components/ui/button"
-import SeriesCard from '@/components/SeriesCard'
-import { useSearchParams } from 'next/navigation'
-import AnimatedLayout from '@/components/AnimatedLayout'
+import { useState, useEffect, Suspense } from 'react';
+import { Activity, Menu } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import SeriesCard from '@/components/SeriesCard';
+import { useSearchParams } from 'next/navigation';
+import AnimatedLayout from '@/components/AnimatedLayout';
 
 interface Series {
   id: string;
@@ -21,31 +21,31 @@ interface Series {
 }
 
 export default function AllSeries() {
-  const [series, setSeries] = useState<Series[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const searchParams = useSearchParams()
-  const filter = searchParams.get('filter')
+  const [series, setSeries] = useState<Series[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const filter = searchParams.get('filter');
 
   useEffect(() => {
     const fetchSeries = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const res = await fetch('/api/cricket?action=series')
-        const data = await res.json()
-        setSeries(data.data || [])
+        const res = await fetch('/api/cricket?action=series');
+        const data = await res.json();
+        setSeries(data.data || []);
       } catch (error) {
-        console.error('Error fetching series:', error)
+        console.error('Error fetching series:', error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchSeries()
-  }, [])
+    fetchSeries();
+  }, []);
 
   const filteredSeries = filter === 'upcoming'
     ? series.filter((s) => new Date(s.startDate) > new Date())
-    : series
+    : series;
 
   return (
     <Suspense fallback={<p className="text-center">Loading...</p>}>
@@ -92,5 +92,5 @@ export default function AllSeries() {
         </div>
       </AnimatedLayout>
     </Suspense>
-  )
+  );
 }
