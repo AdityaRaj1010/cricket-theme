@@ -40,15 +40,16 @@ async function fetchFromNewsAPI(): Promise<unknown> {
   const data = await res.json();
   
   // Filter articles to ensure they are cricket-related
-  const cricketKeywords = ['cricket', 'ipl', 'test match', 'odi', 't20', 'bcci', 'icc'];
-  const filteredArticles = data.articles.filter((article: unknown) => 
-    cricketKeywords.some(keyword => 
-      article.title.toLowerCase().includes(keyword) || 
-      article.description.toLowerCase().includes(keyword)
-    )
-  );
+  // const cricketKeywords = ['cricket', 'ipl', 'test match', 'odi', 't20', 'bcci', 'icc'];
+  // const filteredArticles = data.articles.filter((article: unknown) => 
+  //   cricketKeywords.some(keyword => 
+  //     article.title.toLowerCase().includes(keyword) || 
+  //     article.description.toLowerCase().includes(keyword)
+  //   )
+  // );
 
-  return { ...data, articles: filteredArticles };
+  // return { ...data, articles: filteredArticles };
+  return { ...data};
 }
 
 async function getCachedData(key: string, fetchFunction: () => Promise<unknown>): Promise<unknown> {
