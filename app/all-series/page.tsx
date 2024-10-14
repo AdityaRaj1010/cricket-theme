@@ -1,4 +1,5 @@
-'use client';
+// Importing necessary dependencies
+'use client'; // Ensure the component is a client component
 
 import { useState, useEffect, Suspense } from 'react';
 import { Activity, Menu } from 'lucide-react';
@@ -20,6 +21,7 @@ interface Series {
   matches: number;
 }
 
+// Main Component
 export default function AllSeries() {
   const [series, setSeries] = useState<Series[]>([]);
   const [isLoading, setIsLoading] = useState(true);
