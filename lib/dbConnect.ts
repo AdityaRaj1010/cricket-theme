@@ -45,7 +45,3 @@ async function dbConnect(): Promise<typeof mongoose> {
 }
 
 export default dbConnect;
-
-//api token - rY09F1e9OlqAkCk9Skyack9bZdI0FX5CeWAgdTwzIXFStyhXrVo4e3PvDwbz
-
-// cricAPI key - aea9d053-9bce-44ca-b9a7-72b6ceb19a84
