@@ -10,9 +10,16 @@ interface CacheItem {
   timestamp: number;
 }
 
+interface Article {
+  title: string;
+  description: string;
+  url: string;
+}
+
 interface ApiResponse {
   status: string;
   data: unknown[];
+  articles: Article[];
 }
 
 const cache: { [key: string]: CacheItem } = {};
@@ -40,16 +47,15 @@ async function fetchFromNewsAPI(): Promise<unknown> {
   const data = await res.json();
   
   // Filter articles to ensure they are cricket-related
-  // const cricketKeywords = ['cricket', 'ipl', 'test match', 'odi', 't20', 'bcci', 'icc'];
-  // const filteredArticles = data.articles.filter((article: unknown) => 
-  //   cricketKeywords.some(keyword => 
-  //     article.title.toLowerCase().includes(keyword) || 
-  //     article.description.toLowerCase().includes(keyword)
-  //   )
-  // );
+  const cricketKeywords = ['cricket', 'ipl', 'test match', 'odi', 't20', 'bcci', 'icc'];
+  const filteredArticles = data.articles.filter((article: Article) =>  
+    cricketKeywords.some(keyword => 
+      article.title.toLowerCase().includes(keyword) || 
+      (article.description && article.description.toLowerCase().includes(keyword)) // Check for description existence
+    )
+  );
 
-  // return { ...data, articles: filteredArticles };
-  return { ...data};
+  return { ...data, articles: filteredArticles };
 }
 
 async function getCachedData(key: string, fetchFunction: () => Promise<unknown>): Promise<unknown> {
@@ -69,7 +75,7 @@ export async function GET(request: Request) {
 
   try {
     let data: unknown;
-    switch (action) {
+    switch (action) { 
       case 'matches':
         data = await getCachedData('matches', () => fetchFromCricketAPI('matches'));
         break;
@@ -84,9 +90,10 @@ export async function GET(request: Request) {
     }
     
     if (action === 'news') {
-      return NextResponse.json({ data: data.articles || [] });
-    } else if (data && Array.isArray(data.data)) {
-      return NextResponse.json({ data: data.data });
+      const newsData = data as { articles: unknown[] }; // Assert the type
+      return NextResponse.json({ data: newsData.articles || [] });
+    } else if (data && typeof data === 'object' && 'data' in data && Array.isArray((data as { data: unknown[] }).data)) {
+      return NextResponse.json({ data: (data as { data: unknown[] }).data });
     } else {
       console.error('Unexpected API response structure:', data);
       return NextResponse.json({ error: 'Unexpected API response structure' }, { status: 500 });
