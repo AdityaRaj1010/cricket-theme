@@ -41,7 +41,7 @@ async function fetchFromNewsAPI(): Promise<unknown> {
   
   // Filter articles to ensure they are cricket-related
   const cricketKeywords = ['cricket', 'ipl', 'test match', 'odi', 't20', 'bcci', 'icc'];
-  const filteredArticles = data.articles.filter((article: any) => 
+  const filteredArticles = data.articles.filter((article: unknown) => 
     cricketKeywords.some(keyword => 
       article.title.toLowerCase().includes(keyword) || 
       article.description.toLowerCase().includes(keyword)
