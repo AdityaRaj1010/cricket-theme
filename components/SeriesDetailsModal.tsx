@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import AnimatedLayout from '@/components/AnimatedLayout'
 
 interface Series {
   id: string;
@@ -21,6 +22,7 @@ interface SeriesDetailsProps {
 
 export function SeriesDetailsModal({ series, isOpen, onClose }: SeriesDetailsProps) {
   return (
+    <AnimatedLayout>
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -47,5 +49,6 @@ export function SeriesDetailsModal({ series, isOpen, onClose }: SeriesDetailsPro
         <Button onClick={onClose}>Close</Button>
       </DialogContent>
     </Dialog>
+    </AnimatedLayout>
   )
 }
