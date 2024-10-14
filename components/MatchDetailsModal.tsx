@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import AnimatedLayout from '@/components/AnimatedLayout'
 
 interface Match {
   id: string;
@@ -33,6 +34,7 @@ interface MatchDetailsProps {
 
 export function MatchDetailsModal({ match, isOpen, onClose }: MatchDetailsProps) {
   return (
+    <AnimatedLayout>
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -72,5 +74,6 @@ export function MatchDetailsModal({ match, isOpen, onClose }: MatchDetailsProps)
         <Button onClick={onClose}>Close</Button>
       </DialogContent>
     </Dialog>
+    </AnimatedLayout>
   )
 }
