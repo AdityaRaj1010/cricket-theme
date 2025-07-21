@@ -1,11 +1,15 @@
 // Importing necessary dependencies
 'use client'; // Ensure the component is a client component
 
+import dynamic from 'next/dynamic';
 import { useState, useEffect, Suspense } from 'react';
 import { Activity, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
-import SeriesCard from '@/components/SeriesCard';
+const SeriesCard = dynamic(() => import('@/components/SeriesCard'), {
+  suspense: true,
+});
+// import SeriesCard from '@/components/SeriesCard';
 import { useSearchParams } from 'next/navigation';
 import AnimatedLayout from '@/components/AnimatedLayout';
 
